@@ -24,40 +24,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock user database - In a real app, this would be in a backend
-const mockUsers: (User & { password: string })[] = [
-  {
-    id: '1',
-    email: 'admin@medora.com',
-    password: 'admin123',
-    name: 'System Administrator',
-    role: 'super-admin'
-  },
-  {
-    id: '2',
-    email: 'dr.smith@medora.com',
-    password: 'doctor123',
-    name: 'Dr. Smith',
-    role: 'doctor',
-    specialty: 'Cardiology'
-  },
-  {
-    id: '3',
-    email: 'nurse.johnson@medora.com',
-    password: 'nurse123',
-    name: 'Nurse Johnson',
-    role: 'nurse',
-    department: 'Emergency'
-  },
-  {
-    id: '4',
-    email: 'john.doe@medora.com',
-    password: 'patient123',
-    name: 'John Doe',
-    role: 'patient',
-    patientId: 'P001'
-  }
-];
+
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -79,24 +46,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string, role: UserRole): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const foundUser = mockUsers.find(
-      u => u.email === email && u.password === password && u.role === role
-    );
-    
-    if (foundUser) {
-      const { password: _, ...userWithoutPassword } = foundUser;
-      setUser(userWithoutPassword);
-      localStorage.setItem('medora_user', JSON.stringify(userWithoutPassword));
-      toast.success(`Welcome back, ${foundUser.name}!`);
-      setIsLoading(false);
-      return true;
-    } else {
-      toast.error('Invalid credentials for the selected role');
-      setIsLoading(false);
+    try {
+      const response = await apiRequest('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password, role }),
+      });
+
+      if (response.user) {
+        setUser(response.user);
+        localStorage.setItem('medora_user', JSON.stringify(response.user));
+        toast.success(`Welcome back, ${response.user.name}!`);
+        return true;
+      } else {
+        toast.error('Invalid credentials or role mismatch');
+        return false;
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Login failed. Please try again.');
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,31 +78,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signup = async (userData: Omit<User, 'id'> & { password: string }): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check if user already exists
-    const existingUser = mockUsers.find(u => u.email === userData.email);
-    if (existingUser) {
-      toast.error('User with this email already exists');
-      setIsLoading(false);
+    try {
+      const response = await apiRequest('/api/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify(userData),
+      });
+
+      if (response.user) {
+        setUser(response.user);
+        localStorage.setItem('medora_user', JSON.stringify(response.user));
+        toast.success('Account created successfully!');
+        return true;
+      } else {
+        toast.error('Failed to create account');
+        return false;
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Signup failed. Please try again.');
       return false;
+    } finally {
+      setIsLoading(false);
     }
-    
-    // Create new user
-    const newUser = {
-      ...userData,
-      id: Date.now().toString()
-    };
-    
-    mockUsers.push(newUser);
-    
-    const { password: _, ...userWithoutPassword } = newUser;
-    setUser(userWithoutPassword);
-    localStorage.setItem('medora_user', JSON.stringify(userWithoutPassword));
-    toast.success('Account created successfully!');
-    setIsLoading(false);
-    return true;
   };
 
   const value = {

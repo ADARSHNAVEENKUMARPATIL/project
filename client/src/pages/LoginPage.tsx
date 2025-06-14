@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, Redirect, Link } from 'wouter';
+import { useRoute, Redirect, Link } from 'wouter';
 import { useAuth, UserRole } from '../contexts/AuthContext';
 import { Shield, Stethoscope, Heart, User, Eye, EyeOff } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -19,7 +19,8 @@ const roleNames = {
 };
 
 export default function LoginPage() {
-  const { role } = useParams<{ role: string }>();
+  const [match, params] = useRoute('/login/:role');
+  const role = params?.role;
   const { login, user, isLoading } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
