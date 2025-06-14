@@ -18,7 +18,7 @@ export default function DoctorDashboard() {
     { title: 'View Schedule', icon: Calendar, action: () => alert('Opening Schedule') },
     { title: 'Patient Records', icon: FileText, action: () => alert('Opening Patient Records') },
     { title: 'Telemedicine', icon: Video, action: () => alert('Starting Telemedicine') },
-    { title: 'Availability', icon: Users, action: () => window.location.href = '/doctor-availability' }
+    { title: 'Availability', icon: Users, action: () => setLocation('/doctor-availability') }
   ];
 
   return (

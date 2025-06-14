@@ -1,10 +1,11 @@
-import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLocation } from 'wouter';
 import DashboardLayout from '../../components/DashboardLayout';
 import { Clipboard, Heart, Pill, UserCheck } from 'lucide-react';
 
 export default function NurseDashboard() {
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
 
   const stats = [
     { title: 'Pending Tasks', value: '7', icon: Clipboard, color: 'blue' },
@@ -14,10 +15,10 @@ export default function NurseDashboard() {
   ];
 
   const quickActions = [
-    { title: 'Daily Tasks', icon: Clipboard, action: () => window.location.href = '/tasks' },
+    { title: 'Daily Tasks', icon: Clipboard, action: () => setLocation('/tasks') },
     { title: 'Record Vitals', icon: Heart, action: () => alert('Recording Vitals') },
     { title: 'Medication Admin', icon: Pill, action: () => alert('Medication Administration') },
-    { title: 'Doctor Assist', icon: UserCheck, action: () => window.location.href = '/nurse-assignment' }
+    { title: 'Doctor Assist', icon: UserCheck, action: () => setLocation('/nurse-assignment') }
   ];
 
   return (
