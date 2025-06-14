@@ -1,4 +1,6 @@
 import { users, type User, type InsertUser } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -68,7 +70,9 @@ export class MemStorage implements IStorage {
         id,
         specialty: userData.specialty || null,
         department: userData.department || null,
-        patientId: userData.patientId || null
+        patientId: userData.patientId || null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       this.users.set(id, user);
     });
@@ -91,11 +95,33 @@ export class MemStorage implements IStorage {
       id,
       specialty: insertUser.specialty || null,
       department: insertUser.department || null,
-      patientId: insertUser.patientId || null
+      patientId: insertUser.patientId || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     this.users.set(id, user);
     return user;
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+}
+
+export const storage = new DatabaseStorage();
