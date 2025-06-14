@@ -1,5 +1,4 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 import { Shield, Stethoscope, Heart, User } from 'lucide-react';
 
 export default function HomePage() {

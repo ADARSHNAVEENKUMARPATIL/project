@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, Redirect } from 'wouter';
 import { useAuth, UserRole } from '../contexts/AuthContext';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -22,7 +22,7 @@ export default function SignupPage() {
 
   // Redirect if already logged in
   if (user) {
-    return <Navigate to={`/dashboard/${user.role}`} replace />;
+    return <Redirect to={`/dashboard/${user.role}`} />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

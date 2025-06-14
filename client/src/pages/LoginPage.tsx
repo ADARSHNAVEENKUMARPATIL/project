@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, Navigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, Redirect, Link } from 'wouter';
 import { useAuth, UserRole } from '../contexts/AuthContext';
 import { Shield, Stethoscope, Heart, User, Eye, EyeOff } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -30,12 +30,12 @@ export default function LoginPage() {
 
   // Redirect if already logged in
   if (user) {
-    return <Navigate to={`/dashboard/${user.role}`} replace />;
+    return <Redirect to={`/dashboard/${user.role}`} />;
   }
 
   // Validate role parameter
   if (!role || !Object.keys(roleIcons).includes(role)) {
-    return <Navigate to="/" replace />;
+    return <Redirect to="/" />;
   }
 
   const userRole = role as UserRole;

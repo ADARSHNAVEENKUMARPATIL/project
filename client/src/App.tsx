@@ -1,5 +1,4 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'wouter';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
@@ -17,59 +16,63 @@ function App() {
   return (
     <AuthProvider>
       <div className="min-h-screen bg-gray-50">
-        <Routes>
+        <Switch>
           {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login/:role" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/" component={HomePage} />
+          <Route path="/login/:role">
+            {(params) => <LoginPage />}
+          </Route>
+          <Route path="/signup" component={SignupPage} />
           
           {/* Protected Routes */}
-          <Route path="/dashboard/super-admin" element={
+          <Route path="/dashboard/super-admin">
             <ProtectedRoute allowedRoles={['super-admin']}>
               <SuperAdminDashboard />
             </ProtectedRoute>
-          } />
+          </Route>
           
-          <Route path="/dashboard/doctor" element={
+          <Route path="/dashboard/doctor">
             <ProtectedRoute allowedRoles={['doctor']}>
               <DoctorDashboard />
             </ProtectedRoute>
-          } />
+          </Route>
           
-          <Route path="/dashboard/nurse" element={
+          <Route path="/dashboard/nurse">
             <ProtectedRoute allowedRoles={['nurse']}>
               <NurseDashboard />
             </ProtectedRoute>
-          } />
+          </Route>
           
-          <Route path="/dashboard/patient" element={
+          <Route path="/dashboard/patient">
             <ProtectedRoute allowedRoles={['patient']}>
               <PatientDashboard />
             </ProtectedRoute>
-          } />
+          </Route>
           
           {/* Feature Routes */}
-          <Route path="/doctor-availability" element={
+          <Route path="/doctor-availability">
             <ProtectedRoute allowedRoles={['doctor', 'nurse', 'super-admin']}>
               <DoctorAvailability />
             </ProtectedRoute>
-          } />
+          </Route>
           
-          <Route path="/nurse-assignment" element={
+          <Route path="/nurse-assignment">
             <ProtectedRoute allowedRoles={['nurse', 'super-admin']}>
               <NurseAssignment />
             </ProtectedRoute>
-          } />
+          </Route>
           
-          <Route path="/tasks" element={
+          <Route path="/tasks">
             <ProtectedRoute allowedRoles={['nurse', 'doctor']}>
               <TaskManager />
             </ProtectedRoute>
-          } />
+          </Route>
           
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+          <Route>
+            <Redirect to="/" />
+          </Route>
+        </Switch>
       </div>
     </AuthProvider>
   );
