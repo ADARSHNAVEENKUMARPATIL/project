@@ -13,7 +13,7 @@ interface Appointment {
 export default function DoctorDashboard() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
-  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [showPatientModal, setShowPatientModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
