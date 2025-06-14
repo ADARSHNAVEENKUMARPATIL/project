@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import toast from 'react-hot-toast';
+import { apiRequest } from '../lib/queryClient';
 
 export type UserRole = 'super-admin' | 'doctor' | 'nurse' | 'patient';
 
