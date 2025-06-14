@@ -1,10 +1,11 @@
-import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLocation } from 'wouter';
 import DashboardLayout from '../../components/DashboardLayout';
 import { Calendar, Users, FileText, Video } from 'lucide-react';
 
 export default function DoctorDashboard() {
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
 
   const stats = [
     { title: "Today's Appointments", value: '8', icon: Calendar, color: 'blue' },

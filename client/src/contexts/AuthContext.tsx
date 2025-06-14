@@ -5,13 +5,13 @@ import { apiRequest } from '../lib/queryClient';
 export type UserRole = 'super-admin' | 'doctor' | 'nurse' | 'patient';
 
 export interface User {
-  id: string;
+  id: number;
   email: string;
   name: string;
   role: UserRole;
-  specialty?: string; // For doctors
-  department?: string; // For nurses
-  patientId?: string; // For patients
+  specialty?: string | null; // For doctors
+  department?: string | null; // For nurses
+  patientId?: string | null; // For patients
 }
 
 interface AuthContextType {

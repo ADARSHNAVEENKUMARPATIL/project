@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth, UserRole } from '../contexts/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 import { 
   Home, 
   Bell, 

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Redirect } from 'wouter';
 import { useAuth, UserRole } from '../contexts/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
 
@@ -16,11 +15,11 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
   }
 
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Redirect to="/" />;
   }
 
   if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Redirect to="/" />;
   }
 
   return <>{children}</>;
